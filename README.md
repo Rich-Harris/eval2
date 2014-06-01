@@ -1,4 +1,4 @@
-# create-function
+# eval2.js
 
 Sometimes you need to use generated code in your app. But sometimes that generated code has syntax errors in it, which causes an error to be thrown:
 
