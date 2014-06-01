@@ -4,9 +4,13 @@ module.exports = {
 		strict: false,
 		undef: true,
 		unused: true,
+		sub: true,
 		globals: {
 			define: true,
 			module: true,
+			require: true,
+			__dirname: true,
+			global: true,
 			window: true,
 			document: true,
 			console: true
