@@ -1,4 +1,4 @@
-var _eval, isBrowser, isNode, _nodeRequire, head, Module, useFs, fs, path;
+var _eval, isBrowser, isNode, _nodeRequire, _dir, head, Module, useFs, fs, path;
 
 // This causes code to be eval'd in the global scope
 _eval = eval;
@@ -8,14 +8,17 @@ if ( typeof document !== 'undefined' ) {
 	head = document.getElementsByTagName( 'head' )[0];
 } else if ( typeof process !== 'undefined' ) {
 	isNode = true;
-	_nodeRequire = require;
-	fs = _nodeRequire( 'fs' );
-	path = _nodeRequire( 'path' );
 
 	if ( typeof module !== 'undefined' && typeof module.constructor === 'function' ) {
 		Module = module.constructor;
 	} else {
+		// Special case - we're possibly using RequireJS in node
 		useFs = true;
+		_nodeRequire = require;
+		fs = _nodeRequire( 'fs' );
+		path = _nodeRequire( 'path' );
+
+		_dir = ( typeof __dirname !== 'undefined' ? __dirname : path.dirname( module.uri ) );
 	}
 }
 
@@ -79,7 +82,7 @@ function locateErrorUsingModule ( code, url ) {
 	if ( useFs ) {
 		wrapped = 'module.exports = function () {\n' + code + '\n};';
 		name = '__eval2_' + Math.floor( Math.random() * 100000 ) + '__';
-		filepath = path.join( __dirname, name + '.js' );
+		filepath = path.join( _dir, name + '.js' );
 
 		fs.writeFileSync( filepath, wrapped );
 
