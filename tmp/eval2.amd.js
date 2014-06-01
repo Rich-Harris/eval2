@@ -1,14 +1,4 @@
-/*
-
-	eval2.js - 0.1.2 - 2014-06-01
-	==============================================================
-
-	Copyright 2014 Rich Harris
-	Released under the MIT license.
-
-*/
-
-( function( global ) {
+define( function() {
 
 	'use strict';
 
@@ -98,19 +88,6 @@
 		m.exports();
 	}
 
-	// export as AMD module...
-	if ( typeof define === "function" && define.amd ) {
-		define( function() {
-			return eval2;
-		} );
-	}
+	return eval2;
 
-	// ...or as Common JS module...
-	if ( typeof module !== "undefined" && module.exports ) {
-		module.exports = eval2;
-	}
-
-	// ...or as browser global
-	global.eval2 = eval2;
-
-}( typeof window !== 'undefined' ? window : this ) );
+} );
