@@ -1,5 +1,5 @@
 {
-  "name": "evaluate",
+  "name": "eval2",
   "description": "Replacement for eval that reveals the location of syntax errors",
   "author": "Rich Harris",
   "version": "0.1.0",
