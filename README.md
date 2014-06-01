@@ -1,4 +1,4 @@
-# create-function
+# eval2.js
 
 Sometimes you need to use generated code in your app. But sometimes that generated code has syntax errors in it, which causes an error to be thrown:
 
@@ -28,13 +28,13 @@ var add = new Function( 'a', 'b', 'return a _ b' );
 Install with npm...
 
 ```
-$ npm i create-function
+$ npm i eval2
 ```
 
 ...or bower...
 
 ```
-bower i create-function
+bower i eval2
 ```
 
 ...or grab a copy of [eval2.js](https://raw.githubusercontent.com/Rich-Harris/eval2/master/eval2.js) and include it in your app (works as AMD or node.js module, or as browser global).
