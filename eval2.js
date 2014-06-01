@@ -2,7 +2,7 @@
 
 	'use strict';
 
-	var _eval, isBrowser, isNode, head, Module;
+	var _eval, isBrowser, isNode, head, Module, uid = 0;
 
 	if ( typeof define === 'function' && define.amd ) {
 		define( function () { return eval2; });
@@ -35,19 +35,34 @@
 		try {
 			return _eval( script );
 		} catch ( err ) {
-			// If the script contains a SyntaxError, use the data URI
-			// method to locate it
-			if ( err.name === 'SyntaxError' ) {
-				if ( isBrowser ) {
-					locateErrorUsingDataUri( script );
-				} else {
-					locateErrorUsingModule( script, options.sourceURL || '' );
-				}
+			if ( isNode ) {
+				locateErrorUsingModule( script, options.sourceURL || '' );
+				return;
+			}
+
+			// In browsers, only locate syntax errors. Other errors can
+			// be located via the console in the normal fashion
+			else if ( isBrowser && err.name === 'SyntaxError' ) {
+				locateErrorUsingDataUri( script );
 			}
 
 			throw err;
 		}
 	}
+
+	eval2.Function = function () {
+		var i, args = [], body, wrapped;
+
+		i = arguments.length;
+		while ( i-- ) {
+			args[i] = arguments[i];
+		}
+
+		body = args.pop();
+		wrapped = '(function (' + args.join( ', ' ) + ') {\n' + body + '\n})';
+
+		return eval2( wrapped );
+	};
 
 	function locateErrorUsingDataUri ( code ) {
 		var dataURI, scriptElement;
@@ -65,13 +80,16 @@
 	}
 
 	function locateErrorUsingModule ( code, url ) {
-		var m = new Module();
+		var m = new Module(), fn;
 
 		try {
-			m._compile( '\n' + code, url );
+			m._compile( 'module.exports = function () {\n' + code + '\n};', url );
 		} catch ( err ) {
 			console.error( err );
+			return;
 		}
+
+		m.exports();
 	}
 
 }( typeof window !== 'undefined' ? window : this ));
