@@ -35,13 +35,13 @@
 	describe( 'eval2.Function', function () {
 		it( 'should create a function', function () {
 			var fn = new eval2.Function( 'a', 'b', 'return a + b;' );
-			assert.isFunction( fn );
+			assert.ok( typeof fn === 'function' );
 			assert.equal( fn( 40, 2 ), 42 );
 		});
 
 		it( 'does not require the new operator', function () {
 			var fn = eval2.Function( 'a', 'b', 'return a + b;' );
-			assert.isFunction( fn );
+			assert.ok( typeof fn === 'function' );
 			assert.equal( fn( 40, 2 ), 42 );
 		});
 
