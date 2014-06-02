@@ -1,4 +1,4 @@
-var _eval, isBrowser, isNode, _nodeRequire, _dir, head, Module, useFs, fs, path;
+var _eval, isBrowser, isNode, head, Module;
 
 // This causes code to be eval'd in the global scope
 _eval = eval;
@@ -8,18 +8,7 @@ if ( typeof document !== 'undefined' ) {
 	head = document.getElementsByTagName( 'head' )[ 0 ];
 } else if ( typeof process !== 'undefined' ) {
 	isNode = true;
-
-	if ( typeof module !== 'undefined' && typeof module._compile === 'function' ) {
-		Module = module.constructor;
-	} else {
-		// Special case - we're possibly using RequireJS in node
-		useFs = true;
-		_nodeRequire = require.nodeRequire;
-		fs = _nodeRequire( 'fs' );
-		path = _nodeRequire( 'path' );
-
-		_dir = ( typeof __dirname !== 'undefined' ? __dirname : path.resolve( path.dirname( module.uri ) ) );
-	}
+	Module = ( require.nodeRequire || require )( 'module' );
 }
 
 function eval2( script, options ) {
@@ -80,39 +69,16 @@ function locateErrorUsingDataUri( code ) {
 }
 
 function locateErrorUsingModule( code, url ) {
-	var m, x, wrapped, name, filepath;
+	var m = new Module();
 
-	if ( useFs ) {
-		wrapped = 'module.exports = function () {\n' + code + '\n};';
-		name = '__eval2_' + Math.floor( Math.random() * 100000 ) + '__';
-		filepath = path.join( _dir, name + '.js' );
-
-		fs.writeFileSync( filepath, wrapped );
-
-		try {
-			x = _nodeRequire( filepath );
-		} catch ( err ) {
-			console.error( err );
-			fs.unlinkSync( filepath, wrapped );
-			return;
-		}
-
-		fs.unlinkSync( filepath, wrapped );
-		x();
-	} else {
-		m = new Module();
-
-		try {
-			m._compile( 'module.exports = function () {\n' + code + '\n};', url );
-		} catch ( err ) {
-			console.error( err );
-			return;
-		}
-
-		x = m.x;
+	try {
+		m._compile( 'module.exports = function () {\n' + code + '\n};', url );
+	} catch ( err ) {
+		console.error( err );
+		return;
 	}
 
-	x();
+	m.exports();
 }
 
 module.exports = eval2;
