@@ -9,16 +9,16 @@ if ( typeof document !== 'undefined' ) {
 } else if ( typeof process !== 'undefined' ) {
 	isNode = true;
 
-	if ( typeof module !== 'undefined' && typeof module.constructor === 'function' ) {
+	if ( typeof module !== 'undefined' && typeof module._compile === 'function' ) {
 		Module = module.constructor;
 	} else {
 		// Special case - we're possibly using RequireJS in node
 		useFs = true;
-		_nodeRequire = require;
+		_nodeRequire = require.nodeRequire;
 		fs = _nodeRequire( 'fs' );
 		path = _nodeRequire( 'path' );
 
-		_dir = ( typeof __dirname !== 'undefined' ? __dirname : path.dirname( module.uri ) );
+		_dir = ( typeof __dirname !== 'undefined' ? __dirname : path.resolve( path.dirname( module.uri ) ) );
 	}
 }
 
@@ -87,7 +87,7 @@ function locateErrorUsingModule ( code, url ) {
 		fs.writeFileSync( filepath, wrapped );
 
 		try {
-			x = _nodeRequire( './' + name );
+			x = _nodeRequire( filepath );
 		} catch ( err ) {
 			console.error( err );
 			fs.unlinkSync( filepath, wrapped );
