@@ -53,9 +53,15 @@ var code =
 eval2( '(' + code + ')' );
 
 // You can optionally pass in a sourceURL which will be used
-// for debugging where possible
+// for debugging where possible...
 eval2( '(' + code + ')', {
   sourceURL: 'add.js'
+});
+
+// ...or, if you're really fancy, a dynamic source map
+// (see http://kybernetikos.github.io/jsSandbox/srcmaps/dynamic.html)
+eval2( '(' + code + ')', {
+  sourceMap: { version: 3, ... }
 });
 ```
 
@@ -69,6 +75,12 @@ You can also create functions using `eval2.Function` - this behaves similarly to
 // If the function body contains a syntax error, eval2 will
 // reveal it:
 var add = new eval2.Function( 'a', 'b', 'return a + b' );
+```
+
+You can pass an options object as the final argument:
+
+```js
+var add = new eval2.Function( 'a', 'b', 'return a + b', { sourceMap: { version: 3, ... } });
 ```
 
 
