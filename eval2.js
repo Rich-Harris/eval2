@@ -1,6 +1,6 @@
 /*
 
-	eval2.js - 0.1.5 - 2014-06-02
+	eval2.js - 0.2.0 - 2014-09-28
 	==============================================================
 
 	Copyright 2014 Rich Harris
@@ -13,7 +13,7 @@
 	'use strict';
 
 
-	var _eval, isBrowser, isNode, head, Module;
+	var _eval, isBrowser, isNode, head, Module, base64Encode;
 
 	// This causes code to be eval'd in the global scope
 	_eval = eval;
@@ -26,12 +26,22 @@
 		Module = ( require.nodeRequire || require )( 'module' );
 	}
 
-	function eval2( script, options ) {
-		options = ( typeof options === 'function' ? {
-			callback: options
-		} : options || {} );
+	if ( typeof btoa === 'function' ) {
+		base64Encode = btoa;
+	} else if ( typeof Buffer === 'function' ) {
+		base64Encode = function( str ) {
+			return new Buffer( str, 'utf-8' ).toString( 'base64' );
+		};
+	} else {
+		base64Encode = function() {};
+	}
 
-		if ( options.sourceURL ) {
+	function eval2( script, options ) {
+		options = options || {};
+
+		if ( options.sourceMap ) {
+			script += '\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64Encode( JSON.stringify( options.sourceMap ) );
+		} else if ( options.sourceURL ) {
 			script += '\n//# sourceURL=' + options.sourceURL;
 		}
 
@@ -55,17 +65,31 @@
 
 	eval2.Function = function() {
 		var i, args = [],
-			body, wrapped;
+			body, wrapped, options;
 
 		i = arguments.length;
 		while ( i-- ) {
 			args[ i ] = arguments[ i ];
 		}
 
+		if ( typeof args[ args.length - 1 ] === 'object' ) {
+			options = args.pop();
+		} else {
+			options = {};
+		}
+
+		if ( options.sourceMap ) {
+			options.sourceMap = clone( options.sourceMap );
+
+			// shift everything a line down, to accommodate `(function (...) {`
+			options.sourceMap.mappings = ';' + options.sourceMap.mappings;
+		}
+
+
 		body = args.pop();
 		wrapped = '(function (' + args.join( ', ' ) + ') {\n' + body + '\n})';
 
-		return eval2( wrapped );
+		return eval2( wrapped, options );
 	};
 
 	function locateErrorUsingDataUri( code ) {
@@ -94,6 +118,19 @@
 		}
 
 		m.exports();
+	}
+
+	function clone( obj ) {
+		var cloned = {},
+			key;
+
+		for ( key in obj ) {
+			if ( obj.hasOwnProperty( key ) ) {
+				cloned[ key ] = obj[ key ];
+			}
+		}
+
+		return cloned;
 	}
 
 	// export as AMD module...
