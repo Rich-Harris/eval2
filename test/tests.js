@@ -54,5 +54,36 @@
 		});
 	});
 
+	// difficult to test this in an automated way, but hey-ho - this
+	// should behave as though we had some bona fide compiled CoffeeScript
+	var coffee = [
+		'answer = a + b',
+		'console.log "the answer is " + answer'
+	].join( '\n' );
+
+	var js = [
+		'(function() {',
+		'  var answer;',
+		'',
+		'  answer = a + b;',
+		'',
+		'  console.log("the answer is " + answer);',
+		'',
+		'}).call(this);'
+	].join( '\n' );
+
+
+	var fn = eval2.Function( 'a', 'b', js, {
+		sourceMap: {
+			version: 3,
+			sources: [ 'helloworld.coffee' ],
+			sourcesContent: [ coffee ],
+			names: [],
+			mappings: 'AAAA;AAAA,MAAA,MAAA;;AAAA,EAAA,MAAA,GAAS,CAAA,GAAI,CAAb,CAAA;;AAAA,EACA,OAAO,CAAC,GAAR,CAAY,gBAAA,GAAmB,MAA/B,CADA,CAAA;AAAA'
+		}
+	});
+
+	fn( 40, 2 );
+
 }());
 
