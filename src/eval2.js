@@ -21,7 +21,7 @@ if ( typeof btoa === 'function' ) {
 	base64Encode = function () {};
 }
 
-function eval2 ( script, options ) {
+export default function eval2 ( script, options ) {
 	options = options || {};
 
 	if ( options.sourceMap ) {

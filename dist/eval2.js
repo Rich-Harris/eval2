@@ -1,17 +1,8 @@
-/*
-
-	eval2.js - 0.2.0 - 2014-09-28
-	==============================================================
-
-	Copyright 2014 Rich Harris
-	Released under the MIT license.
-
-*/
-
-define( function() {
-
-	'use strict';
-
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	global.eval2 = factory()
+}(this, function () { 'use strict';
 
 	var _eval, isBrowser, isNode, head, Module, base64Encode;
 
@@ -20,7 +11,7 @@ define( function() {
 
 	if ( typeof document !== 'undefined' ) {
 		isBrowser = true;
-		head = document.getElementsByTagName( 'head' )[ 0 ];
+		head = document.getElementsByTagName( 'head' )[0];
 	} else if ( typeof process !== 'undefined' ) {
 		isNode = true;
 		Module = ( require.nodeRequire || require )( 'module' );
@@ -29,19 +20,21 @@ define( function() {
 	if ( typeof btoa === 'function' ) {
 		base64Encode = btoa;
 	} else if ( typeof Buffer === 'function' ) {
-		base64Encode = function( str ) {
+		base64Encode = function ( str ) {
 			return new Buffer( str, 'utf-8' ).toString( 'base64' );
 		};
 	} else {
-		base64Encode = function() {};
+		base64Encode = function () {};
 	}
 
-	function eval2( script, options ) {
+	function eval2 ( script, options ) {
 		options = options || {};
 
 		if ( options.sourceMap ) {
 			script += '\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64Encode( JSON.stringify( options.sourceMap ) );
-		} else if ( options.sourceURL ) {
+		}
+
+		else if ( options.sourceURL ) {
 			script += '\n//# sourceURL=' + options.sourceURL;
 		}
 
@@ -63,13 +56,12 @@ define( function() {
 		}
 	}
 
-	eval2.Function = function() {
-		var i, args = [],
-			body, wrapped, options;
+	eval2.Function = function () {
+		var i, args = [], body, wrapped, options;
 
 		i = arguments.length;
 		while ( i-- ) {
-			args[ i ] = arguments[ i ];
+			args[i] = arguments[i];
 		}
 
 		if ( typeof args[ args.length - 1 ] === 'object' ) {
@@ -92,7 +84,7 @@ define( function() {
 		return eval2( wrapped, options );
 	};
 
-	function locateErrorUsingDataUri( code ) {
+	function locateErrorUsingDataUri ( code ) {
 		var dataURI, scriptElement;
 
 		dataURI = 'data:text/javascript;charset=utf-8,' + encodeURIComponent( code );
@@ -100,14 +92,14 @@ define( function() {
 		scriptElement = document.createElement( 'script' );
 		scriptElement.src = dataURI;
 
-		scriptElement.onload = function() {
+		scriptElement.onload = function () {
 			head.removeChild( scriptElement );
 		};
 
 		head.appendChild( scriptElement );
 	}
 
-	function locateErrorUsingModule( code, url ) {
+	function locateErrorUsingModule ( code, url ) {
 		var m = new Module();
 
 		try {
@@ -120,9 +112,8 @@ define( function() {
 		m.exports();
 	}
 
-	function clone( obj ) {
-		var cloned = {},
-			key;
+	function clone ( obj ) {
+		var cloned = {}, key;
 
 		for ( key in obj ) {
 			if ( obj.hasOwnProperty( key ) ) {
@@ -135,4 +126,4 @@ define( function() {
 
 	return eval2;
 
-} );
+}));

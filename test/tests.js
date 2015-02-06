@@ -6,7 +6,7 @@
 
 	if ( typeof require === 'function' ) {
 		assert = require( 'assert' );
-		eval2 = require( '../eval2' );
+		eval2 = require( '../' );
 	} else {
 		assert = chai.assert;
 		eval2 = window.eval2;
