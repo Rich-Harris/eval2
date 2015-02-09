@@ -1,4 +1,5 @@
 {
+	"esnext": true,
 	"strict": false,
 	"undef": true,
 	"unused": true,
