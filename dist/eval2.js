@@ -31,7 +31,7 @@
 		options = options || {};
 
 		if ( options.sourceMap ) {
-			script += '\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64Encode( JSON.stringify( options.sourceMap ) );
+			script += '\n//# sourceMa' + 'ppingURL=data:application/json;charset=utf-8;base64,' + base64Encode( JSON.stringify( options.sourceMap ) );
 		}
 
 		else if ( options.sourceURL ) {
@@ -70,6 +70,11 @@
 			options = {};
 		}
 
+		// allow an array of arguments to be passed
+		if ( args.length === 1 && Object.prototype.toString.call( args ) === '[object Array]' ) {
+			args = args[0];
+		}
+
 		if ( options.sourceMap ) {
 			options.sourceMap = clone( options.sourceMap );
 
@@ -87,7 +92,7 @@
 	function locateErrorUsingDataUri ( code ) {
 		var dataURI, scriptElement;
 
-		dataURI = 'data:text/javascript;charset=utf-8,' + encodeURIComponent( code );
+		dataURI = 'da' + 'ta:text/javascript;charset=utf-8,' + encodeURIComponent( code );
 
 		scriptElement = document.createElement( 'script' );
 		scriptElement.src = dataURI;
