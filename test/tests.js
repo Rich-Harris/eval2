@@ -39,6 +39,12 @@
 			assert.equal( fn( 40, 2 ), 42 );
 		});
 
+		it( 'should accept an array of arguments', function () {
+			var fn = new eval2.Function([ 'a', 'b' ], 'return a + b;' );
+			assert.ok( typeof fn === 'function' );
+			assert.equal( fn( 40, 2 ), 42 );
+		});
+
 		it( 'does not require the new operator', function () {
 			var fn = eval2.Function( 'a', 'b', 'return a + b;' );
 			assert.ok( typeof fn === 'function' );
