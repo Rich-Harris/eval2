@@ -1,5 +1,9 @@
 # changelog
 
+## 0.3.2
+
+* More workarounds to prevent 'helpful' minifiers breaking everything
+
 ## 0.3.1
 
 * `eval2.Function` can now accept an array of argument names - e.g. `fn = new eval2.Function(['a', 'b', 'c'], body)`

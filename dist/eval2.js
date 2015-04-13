@@ -6,6 +6,9 @@
 
 	var _eval, isBrowser, isNode, head, Module, base64Encode;
 
+	var SOURCE_MAPPING_URL = 'sourceMappingUrl';
+	var DATA = 'data';
+
 	// This causes code to be eval'd in the global scope
 	_eval = eval;
 
@@ -31,7 +34,7 @@
 		options = options || {};
 
 		if ( options.sourceMap ) {
-			script += '\n//# sourceMa' + 'ppingURL=data:application/json;charset=utf-8;base64,' + base64Encode( JSON.stringify( options.sourceMap ) );
+			script += '\n//# ' + SOURCE_MAPPING_URL + '=data:application/json;charset=utf-8;base64,' + base64Encode( JSON.stringify( options.sourceMap ) );
 		}
 
 		else if ( options.sourceURL ) {
@@ -92,7 +95,7 @@
 	function locateErrorUsingDataUri ( code ) {
 		var dataURI, scriptElement;
 
-		dataURI = 'da' + 'ta:text/javascript;charset=utf-8,' + encodeURIComponent( code );
+		dataURI = DATA + ':text/javascript;charset=utf-8,' + encodeURIComponent( code );
 
 		scriptElement = document.createElement( 'script' );
 		scriptElement.src = dataURI;
