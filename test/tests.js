@@ -1,3 +1,4 @@
+/*global describe, it, chai */
 (function () {
 
 	'use strict';
@@ -29,6 +30,18 @@
 			} catch ( err ) {
 				assert.equal( err.name, 'SyntaxError' );
 			}
+		});
+
+		it( 'should accept a sourcemap with non-Latin1 characters (#1)', function () {
+			eval2( '1 + 2', {
+				sourceMap: {
+					version: 3,
+					file: 'foo.js',
+					sources: [ 'foo.xyz' ],
+					sourcesContent: [ 'РЖД' ],
+					mappings: 'AACA'
+				}
+			});
 		});
 	});
 

@@ -21,7 +21,16 @@
 	}
 
 	if ( typeof btoa === 'function' ) {
-		base64Encode = btoa;
+		base64Encode = function ( str ) {
+			str = str.replace( /[^\x00-\x7F]/g, function ( char ) {
+				var hex = char.charCodeAt( 0 ).toString( 16 );
+				while ( hex.length < 4 ) hex = '0' + hex;
+
+				return '\\u' + hex;
+			});
+
+			return btoa( str );
+		};
 	} else if ( typeof Buffer === 'function' ) {
 		base64Encode = function ( str ) {
 			return new Buffer( str, 'utf-8' ).toString( 'base64' );
