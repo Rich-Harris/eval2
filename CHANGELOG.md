@@ -1,5 +1,9 @@
 # changelog
 
+## 0.3.3
+
+* Allow non-Latin1 characters in sourcemaps ([#1](https://github.com/Rich-Harris/eval2/issues/1))
+
 ## 0.3.2
 
 * More workarounds to prevent 'helpful' minifiers breaking everything
